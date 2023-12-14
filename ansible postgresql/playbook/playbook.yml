@@ -1,0 +1,41 @@
+- name: Установка и настройка PostgreSQL
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Установка PostgreSQL
+      apt:
+        name: postgresql
+        state: present
+
+    - name: Установка дополнительного пакета python-psycopg2
+      apt:
+        name: python3-psycopg2
+        state: present
+
+    - name: Создание роли БД
+      become_user: postgres
+      postgresql_user:
+        name: admin
+        password: mypassword
+        login_user: postgres
+        login_password: mypostgrespassword
+        login_host: localhost
+        login_unix_socket: /var/run/postgresql
+        state: present
+
+    - name: Создание БД
+      become_user: postgres
+      postgresql_db:
+        name: mydatabase
+        owner: myuser
+        login_user: postgres
+        login_password: mypostgrespassword
+        login_host: localhost
+        login_unix_socket: /var/run/postgresql
+        state: present
+
+    - name: Перезапуск службы PostgreSQL
+      service:
+        name: postgresql
+        state: restarted
