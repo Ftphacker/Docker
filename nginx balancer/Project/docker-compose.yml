@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  nginx1:
+    image: nginx
+    ports:
+      - "180:180"
+    volumes:
+      - ./nginx/conf/ng1.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/pages/page1.html:/usr/share/nginx/html/index.html
+    restart: always
+
+  nginx2:
+    image: nginx
+    ports:
+      - "181:181"
+    volumes:
+      - ./nginx/conf/ng2.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/pages/page2.html:/usr/share/nginx/html/index.html
+    restart: always
+
+  main_nginx:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      #- ./main3:/etc/nginx/sites-available/default:ro
+      #- ./main3.conf:/etc/nginx/nginx.conf:ro
+      #- ./main.conf:/etc/nginx/nginx.conf:ro
+      #- ./main2.conf:/etc/nginx/conf.d/defaul.conf:ro
+    restart: always
+    depends_on:
+      - nginx1
+      - nginx2
+
+
