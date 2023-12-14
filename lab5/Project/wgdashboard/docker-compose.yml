@@ -1,0 +1,23 @@
+services:
+  web:
+    build:
+      dockerfile: ./Dockerfile
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    volumes:
+      - wg-volume:/etc/wireguard
+    restart: unless-stopped
+    ports:
+      - 10086:10086
+      - 51820:51820/udp
+    networks:
+      wg_networks:
+    cpus: 0.50
+    mem_limit: 256M
+
+volumes:
+  wg-volume:
+
+networks:
+  wg_networks:
